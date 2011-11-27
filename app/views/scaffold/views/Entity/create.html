@@ -1,8 +1,7 @@
 ${play.modules.scaffold.utils.Tags.openTemplateTag}extends 'main.html' /}
 
-<h2>
-${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'scaffold.create'}
-</h2>
+<h2>#{scaffold.i18nWithParam entity:entity.name , expr: 'scaffold.$1' , arg: 'scaffold.create.title'/}</h2>
+
 
 <div class="entity">
 ${play.modules.scaffold.utils.Tags.openTemplateTag}form @${entity.controllerName}.save(), id:'createForm'}

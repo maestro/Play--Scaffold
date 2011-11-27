@@ -18,16 +18,16 @@
 		#{/if}
 	
 		<p id="username-field">
-			<label for="username">${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'secure.username'}</label>
+			<label for="username">&{'secure.username'}</label>
 			<input type="text" name="username" id="username" value="${flash.username}" />
 		</p>
 		<p id="password-field">
-			<label for="password">${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'secure.password'}</label>
+			<label for="password">&{'secure.password'}</label>
 			<input type="password" name="password" id="password" value="" />
 		</p>
 		<p id="remember-field">
 			<input type="checkbox" name="remember" id="remember" value="true" ${flash.remember ? 'checked="true"' : ''} />
-			<label for="remember">${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'secure.remember'}</label>
+			<label for="remember">&{'secure.remember'}</label>
 		</p>
 		<p id="signin-field">
 			<input type="submit" id="signin" value="&{'secure.signin'}" />
