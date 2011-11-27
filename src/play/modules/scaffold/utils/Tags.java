@@ -54,7 +54,18 @@ public class Tags {
         sb.append("%}");
         return sb.toString();
     }
-
+    
+    public static String generatei18n(String entity, String expr){
+        StringBuilder sb = new StringBuilder();
+        sb.append("&{'");
+        if (entity != null) {
+            expr = expr.replaceAll("\\$1", entity);
+        }
+        sb.append(expr);
+        sb.append("'}");
+        return sb.toString();
+    	
+    }
     public static String getOpenScriptTag() {
         return "%{";
     }
