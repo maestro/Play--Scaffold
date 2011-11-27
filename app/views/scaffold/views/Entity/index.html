@@ -1,6 +1,6 @@
 ${play.modules.scaffold.utils.Tags.openTemplateTag}extends 'main.html' /}
 
-<h2>${entity.controllerName}</h2>
+<h2>#{scaffold.i18n entity:entity.name , expr: 'scaffold.$1'/}</h2>
 
 <table class="entity ${entity.name}">
 	<thead>
@@ -8,7 +8,7 @@ ${play.modules.scaffold.utils.Tags.openTemplateTag}extends 'main.html' /}
 			<th><!-- actions --></th>
 			#{list items:entity.formElements, as:'elem'}
 	        #{ifnot elem.isPassword()}
-				<th>${elem.label}</th>
+				<th>#{scaffold.i18n entity:entity.name + '.' + elem.path('.'), expr:'scaffold.$1' /}</th>
 	        #{/ifnot}
 			#{/list}
 		</tr>
@@ -17,9 +17,9 @@ ${play.modules.scaffold.utils.Tags.openTemplateTag}extends 'main.html' /}
 	${play.modules.scaffold.utils.Tags.openTemplateTag}list items:entities, as:'entity'}
 		<tr>
 			<td>
-				<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.show(entity.${entity.idField})}">&{'scaffold.show'}</a>&nbsp;
-				<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.edit(entity.${entity.idField})}">&{'scaffold.edit'}</a>&nbsp;
-				<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.delete(entity.${entity.idField})}" onclick="if (!confirm('&{'scaffold.delete.confirm'}')) return false;">&{'scaffold.delete'}</a>
+				<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.show(entity.${entity.idField})}" class="button">${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'scaffold.show'}</a>&nbsp;
+				<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.edit(entity.${entity.idField})}" class="button">${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'scaffold.edit'}</a>&nbsp;
+				<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.delete(entity.${entity.idField})}" class="button" onclick="if (!confirm('${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'scaffold.delete.confirm'}')) return false;">${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'scaffold.delete'}</a>
 			</td>
 			#{list items:entity.formElements, as:'elem'}
         #{ifnot elem.isPassword()}
@@ -31,4 +31,4 @@ ${play.modules.scaffold.utils.Tags.openTemplateTag}extends 'main.html' /}
 	</tbody>
 </table>
 
-<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.create}">&{'scaffold.create'}</a>
+<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.create}" class="button">#{scaffold.i18n entity:entity.name, expr:'scaffold.create' /}</a>

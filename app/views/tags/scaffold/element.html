@@ -1,8 +1,8 @@
 <div class="row">
-  <div class="label">#{ifnot _element.isHidden()}#{scaffold.i18n entity:_entity.name + '.' + _element.path('.'), expr:'scaffold.$1' /}#{/ifnot}</div>
+  <label for="${_element.path}">#{ifnot _element.isHidden()}#{scaffold.i18n entity:_entity.name + '.' + _element.path('.'), expr:'scaffold.$1' /}#{/ifnot}</label>
   <div class="field">
     #{if _element.isCheckbox() }
-      <input type="checkbox" name="entity.${_element.path}"
+      <input type="checkbox" name="entity.${_element.path}" id="${_element.path}"
         #{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1 ? \'checked\':\'\'' /}
       />
     #{/if}
@@ -27,7 +27,7 @@
     #{/elseif}
     #{elseif _element.isRelation()}
       #{if _element.isMultiple()}
-        <select name="entity.${_element.path}.id" multiple>
+        <select name="entity.${_element.path}.id"  id="${_element.path}" multiple>
         ${play.modules.scaffold.utils.Tags.openScriptTag} ${play.modules.scaffold.generator.DatabaseAccessScaffolding.allFor(_element.fieldType)}.sort{ it.toString() }.each() { }%
           %{ String idField = play.modules.scaffold.entity.Entity.from(_element.fieldType).idField %}
           ${play.modules.scaffold.utils.Tags.openScriptTag} 
@@ -44,7 +44,7 @@
       #{else}
         <select name="entity.${_element.path}.id">
               #{ifnot _element.isRequired()}
-                      <option value="">&{'scaffold.none'}</option>              
+                      <option value="">${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'scaffold.none'}</option>              
               #{/ifnot}
         ${play.modules.scaffold.utils.Tags.openScriptTag} ${play.modules.scaffold.generator.DatabaseAccessScaffolding.allFor(_element.fieldType)}.sort{ it.toString() }.each() { }%
           %{ String idField = play.modules.scaffold.entity.Entity.from(_element.fieldType).idField %}
@@ -62,19 +62,19 @@
     #{elseif _element.isList()}
     	#{if Enum.class.isAssignableFrom(_element.getFieldType())}
 			${play.modules.scaffold.utils.Tags.openTemplateTag}list items:${_element.getFieldType().getName()}.values(), as:'en'} <input
-				type="checkbox" name="entity.${_element.path}" value="#{scaffold.expression entity:'en', expr:'$1'/}" ${play.modules.scaffold.utils.Tags.openTemplateTag}if entity?.${_element.path}?.contains(en)} checked ${play.modules.scaffold.utils.Tags.openTemplateTag}/if}>#{scaffold.expression entity:'en', expr:'$1'/}</input>
+				type="checkbox"  id="${_element.path}" name="entity.${_element.path}" value="#{scaffold.expression entity:'en', expr:'$1'/}" ${play.modules.scaffold.utils.Tags.openTemplateTag}if entity?.${_element.path}?.contains(en)} checked ${play.modules.scaffold.utils.Tags.openTemplateTag}/if}>#{scaffold.expression entity:'en', expr:'$1'/}</input>
 				<br />
 			${play.modules.scaffold.utils.Tags.openTemplateTag}/list}    	
     	#{/if}
     #{/elseif}
     #{elseif _element.isTextArea()}
-      <textarea name="entity.${_element.path}" rows="10" cols="40">#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}</textarea>
+      <textarea  id="${_element.path}" name="entity.${_element.path}" rows="10" cols="40">#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}</textarea>
     #{/elseif}
     #{elseif _element.isPassword()}
-      <input type="password" name="entity.${_element.path}" value="#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}"/>
+      <input type="password"  id="${_element.path}" name="entity.${_element.path}" value="#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}"/>
     #{/elseif}
     #{elseif _element.isHidden()}
-      <input type="hidden" name="entity.${_element.path}" value="#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}"/>
+      <input type="hidden"  id="${_element.path}" name="entity.${_element.path}" value="#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}"/>
     #{/elseif}
     #{elseif _element.isEmbedded()}
         #{list items:_element.fieldAsEntity.formElements, as:'elem'}
@@ -82,7 +82,7 @@
         #{/list}        
     #{/elseif}
     #{else}
-      <input type="text" name="entity.${_element.path}" value="#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}"/>
+      <input type="text"  id="${_element.path}" name="entity.${_element.path}" value="#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}"/>
     #{/else}
   </div>
   <span class="error">#{scaffold.expression entity:_element.path, expr:'errors.forKey(\'entity.$1\')' /}</span>

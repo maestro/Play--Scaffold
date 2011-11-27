@@ -1,13 +1,13 @@
 ${play.modules.scaffold.utils.Tags.openTemplateTag}extends 'main.html' /}
 
-<h2>View ${entity.name}</h2>
+<h2>#{scaffold.i18n entity:entity.name , expr: 'scaffold.$1'/}</h2>
 
 <div class="entity">
 #{list items:entity.formElements, as:'elem'}
   #{ifnot elem.isPassword()}
 	<div class="row">
 		<span class="elem">
-			${elem.name}:
+      #{scaffold.i18n entity:entity.name + '.' + elem.path('.'), expr:'scaffold.$1' /}
 		</span>
 		<span class="value">
       #{scaffold.expression entity:elem.name, expr:'entity.$1' /}
@@ -17,4 +17,4 @@ ${play.modules.scaffold.utils.Tags.openTemplateTag}extends 'main.html' /}
 #{/list}
 </div>
 
-<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.index}">&{'scaffold.back'}</a>
+<a href="${play.modules.scaffold.utils.Tags.openActionTag}${entity.controllerName}.index}" class="button">${play.modules.scaffold.utils.Tags.openi18nTag.raw()}'scaffold.back'}</a>
