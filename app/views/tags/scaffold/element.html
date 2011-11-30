@@ -6,6 +6,14 @@
         #{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1 ? \'checked\':\'\'' /}
       />
     #{/if}
+    #{if _element.isRadio() }
+      #{list _element.options, as: 'option'}
+      <input type="radio" name="entity.${_element.path}" id="entity.${_element.path}.${option.key}" value="${option}" class="nofloat"
+           ${play.modules.scaffold.utils.Tags.openTemplateTag}if entity?.${_element.path}?.toString() == "${option}"} checked ${play.modules.scaffold.utils.Tags.openTemplateTag}/if}
+           />
+      <label for="entity.${_element.path}.${option.key}" class="nofloat">${option.label}</label>
+      #{/list}
+    #{/if}
     #{elseif _element.isDate()}
       <script type="text/javascript">
         $(function() {
@@ -21,7 +29,7 @@
       <select name="entity.${_element.path}">
         #{list _element.options, as: 'option'}
           <option value="${option}" 
-            #{scaffold.expression entity:[_element.path('?.'),option], expr:'(entity?.$1?.name() == \'$2\') ? \'selected\':\'\'' /}>${option}</option>
+           ${play.modules.scaffold.utils.Tags.openTemplateTag}if entity?.${_element.path}?.toString() == "${option}"} selected ${play.modules.scaffold.utils.Tags.openTemplateTag}/if}>${option}</option>
         #{/list}
       </select>
     #{/elseif}
