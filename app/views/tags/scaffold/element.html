@@ -1,5 +1,5 @@
-<div class="row">
-  <label for="${_element.path}">#{ifnot _element.isHidden()}#{scaffold.i18n entity:_entity.name + '.' + _element.path('.'), expr:'scaffold.$1' /}#{/ifnot}</label>
+<div class="row" id="${_element.path}_row">
+  <label for="${_element.path}">#{ifnot _element.isHidden()}#{scaffold.i18n entity:_entity.name + '.' + _element.path('.'), expr:'scaffold.$1.full' /}#{/ifnot}</label>
   <div class="field">
     #{if _element.isCheckbox() }
       <input type="checkbox" name="entity.${_element.path}" id="${_element.path}"
@@ -8,8 +8,8 @@
     #{/if}
     #{if _element.isRadio() }
       #{list _element.options, as: 'option'}
-      <input type="radio" name="entity.${_element.path}" id="entity.${_element.path}.${option.key}" value="${option}" class="nofloat"
-           ${play.modules.scaffold.utils.Tags.openTemplateTag}if entity?.${_element.path}?.toString() == "${option}"} checked ${play.modules.scaffold.utils.Tags.openTemplateTag}/if}
+      <input type="radio" name="entity.${_element.path}" id="entity.${_element.path}.${option.key}" value="${option.name()}" class="nofloat"
+           ${play.modules.scaffold.utils.Tags.openTemplateTag}if entity?.${_element.path}?.name() == "${option.name()}"} checked ${play.modules.scaffold.utils.Tags.openTemplateTag}/if}
            />
       <label for="entity.${_element.path}.${option.key}" class="nofloat">${option.label}</label>
       #{/list}
@@ -90,8 +90,27 @@
         #{/list}        
     #{/elseif}
     #{else}
-      <input type="text"  id="${_element.path}" name="entity.${_element.path}" value="#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}"/>
+      #{list _element.options, as: 'option'}
+        #{if option?.size}
+          #{if option.size == 99}
+            #{set class:'span1'/}
+            #{set maxlength:option.size.toString().length()/}
+          #{/if}
+          #{if option.size == 9999}
+            #{set class:'span1'/}
+            #{set maxlength:option.size.toString().length()/}
+          #{/if}
+           
+        #{/if}
+      #{/list}
+      <input type="text" id="${_element.path}" name="entity.${_element.path}" 
+         value="#{scaffold.expression entity:_element.path('?.'), expr:'entity?.$1' /}" 
+         class="#{get 'class'}default#{/}"
+         maxlength="#{get 'maxlength'}100#{/}"/>
     #{/else}
+  </div>
+  <div class="explanation">
+  #{scaffold.i18n entity:_entity.name + '.' + _element.path('.'), expr:'scaffold.$1.explanation' /}
   </div>
   <span class="error">#{scaffold.expression entity:_element.path, expr:'errors.forKey(\'entity.$1\')' /}</span>
 </div>

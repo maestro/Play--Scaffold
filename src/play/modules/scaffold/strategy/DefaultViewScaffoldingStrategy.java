@@ -21,8 +21,11 @@ package play.modules.scaffold.strategy;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import play.data.validation.Max;
 import play.modules.scaffold.NoScaffolding;
 import play.modules.scaffold.ViewScaffoldingOverride;
 import play.modules.scaffold.form.FormElement;
@@ -32,42 +35,49 @@ import play.modules.scaffold.utils.Fields;
 
 public class DefaultViewScaffoldingStrategy implements ViewScaffoldingStrategy {
 
-	public FormElement render(Field field) {
-		String name = field.getName();
-		FormElementType type;
-		List<Object> options = null;
-		Class<?> classType = field.getType();
-		List<String> annotationNames = Fields.annotationNames(field);
-		if (classType.equals(Boolean.class) || classType.equals(boolean.class)) {
-			type = FormElementType.CHECKBOX;
-		} else if (classType.equals(Date.class)) {
-			type = FormElementType.DATE;
-		} else if (classType.isEnum()) {
-			type = FormElementType.SELECT;
-			Class<Enum> enumClass = (Class<Enum>) classType;
-			// options = Enums.list(Enums.values(enumClass));
-			options = new ArrayList<Object>();
-			for (Enum e : Enums.values(enumClass)) {
-				options.add(e);
-			}
-		} else if (annotationNames.contains("play.data.validation.Password")) {
-			type = FormElementType.PASSWORD;
-		} else {
-			type = FormElementType.TEXT;
-		}
-		NoScaffolding formHint = field.getAnnotation(NoScaffolding.class);
-		if (formHint != null)
-			return null;
-		ViewScaffoldingOverride formOverride = field
-				.getAnnotation(ViewScaffoldingOverride.class);
-		if (formOverride != null) {
-			// user override for the FormElementType
-			type = formOverride.type();
-		}
-		FormElement element = new FormElement(field, type, options);
-		if (annotationNames.contains("play.data.validation.Required")) {
-			element.setRequired(true);
-		}
-		return element;
-	}
+  @Override
+  public FormElement render(Field field) {
+    String name = field.getName();
+    FormElementType type;
+    List<Object> options = null;
+    Class<?> classType = field.getType();
+    List<String> annotationNames = Fields.annotationNames(field);
+    if (classType.equals(Boolean.class) || classType.equals(boolean.class)) {
+      type = FormElementType.CHECKBOX;
+    } else if (classType.equals(Date.class)) {
+      type = FormElementType.DATE;
+    } else if (classType.isEnum()) {
+      type = FormElementType.SELECT;
+      Class<Enum> enumClass = (Class<Enum>) classType;
+      // options = Enums.list(Enums.values(enumClass));
+      options = new ArrayList<Object>();
+      for (Enum e : Enums.values(enumClass)) {
+        options.add(e);
+      }
+    } else if (annotationNames.contains("play.data.validation.Password")) {
+      type = FormElementType.PASSWORD;
+    } else {
+      type = FormElementType.TEXT;
+      options = new ArrayList<Object>();
+      Max maxSize = field.getAnnotation(Max.class);
+      Map<String, Integer> sizeMap = new HashMap<String, Integer>();
+      if (maxSize != null) {
+        sizeMap.put("size", (int) maxSize.value());
+        options.add(sizeMap);
+      }
+    }
+    NoScaffolding formHint = field.getAnnotation(NoScaffolding.class);
+    if (formHint != null)
+      return null;
+    ViewScaffoldingOverride formOverride = field.getAnnotation(ViewScaffoldingOverride.class);
+    if (formOverride != null) {
+      // user override for the FormElementType
+      type = formOverride.type();
+    }
+    FormElement element = new FormElement(field, type, options);
+    if (annotationNames.contains("play.data.validation.Required")) {
+      element.setRequired(true);
+    }
+    return element;
+  }
 }
